@@ -142,7 +142,7 @@ void createTelemetryPacket()
 
 float getAltitude(float P)
 {
-    return (Rair*(T + 273.15)*log(P0/P))/ug;
+    return (Rair*(T+273.15)*log(P0/P))/ug;
 }
 
 bool sciSendData(uint32 numOfDat, char* charDat, bool CR)
