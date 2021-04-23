@@ -27,7 +27,9 @@
 
 /* ------------------ VARIABLES ------------------*/
 char command[COMM_SIZE] = {};
+char tramaAPI[COMM_SIZE] = {};
 uint32 buff_size = 0;
+uint32 buff_sizeAPI = 0;
 
 char CMD_KEY[LONG_CMD_KEY] = {};
 
@@ -104,6 +106,11 @@ void createTelemetryPacket()
 
     ftoa(ALTITUDE_BAR, cALTITUDE_BAR, 1);
     ftoa(TEMPERATURE, cTEMPERATURE, 1);
+    char preSum = 0x00;
+    char Sum = 0x00;
+    char checksum = 0x00;
+    int i=0;
+    char longAPI = 0x00;
 
     buff_size = sprintf(command,
                         CONT_FORMAT,                     /* <TELEMETRY_FORMAT> */
@@ -138,6 +145,40 @@ void createTelemetryPacket()
 //                        SP2_TEMPERATURE,                /* <TEMP> */
 //                        SP2_ROTATION_RATE               /* <SP_ROTATION_RATE> */
                         );
+            longAPI = (char*)buff_size + 0x0E;          /* LONGITUD DE LA TRAMA     0E ES CONSTANTE */
+
+            preSum = 0x00;                              /* SUMA HEXADECIMAL DE CADA CARACTER */
+
+            for(i=0; i<buff_size; i++)                  //Caracteres de la trama
+            {
+                preSum = preSum + command[i];
+            }
+
+            /*Cheksum*/
+            Sum = 0x10 + (DH>>24) + ((DH>>16) & 0xFF) + ((DH>>8) & 0xFF) + (DH & 0xFF) + (DL_ET>>24) + ((DL_ET>>16) & 0xFF) + ((DL_ET>>8) & 0xFF) + (DL_ET & 0xFF) + 0xFF + 0xFE + preSum;
+            checksum = (0xFF - (Sum & 0xFF));
+
+            buff_sizeAPI = sprintf(tramaAPI,"%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%s%c",
+                                               0x7E,    //1 Start Delimiter
+                                               0x00,    //2 Length
+                                               longAPI,    //3 Length
+                                               0x10,    //4 Frame type
+                                               0x00,    //5 Frame ID
+                                               DH>>24,  //6 Dest. Adress
+                                               (DH>>16) & 0xFF, //7 Dest. Adress
+                                               (DH>>8) & 0xFF,  //8 Dest. Adress
+                                               DH & 0xFF,       //9 Dest. Adress
+                                               DL_ET>>24,          //10 Dest. Adress
+                                               (DL_ET>>16) & 0xFF, //11 Dest. Adress
+                                               (DL_ET>>8) & 0xFF,  //12 Dest. Adress
+                                               DL_ET & 0xFF,       //13 Dest. Adress
+                                               0xFF,    //14 Reserved
+                                               0xFE,    //15 Reserved
+                                               0x00,    //Broadcast radio
+                                               0x00,    //16 Cmd. Options
+                                               //D0 MENSAJE - RF DATA
+                                               command,
+                                               checksum); //18);
 }
 
 float getAltitude(float P)
