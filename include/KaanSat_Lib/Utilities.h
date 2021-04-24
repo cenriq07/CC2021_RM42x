@@ -59,6 +59,9 @@
 #define SPOS_SP1        505
 #define SPOS_SP2        750
 
+#define DH 0x0013A200
+#define DL_ET 0x40E5421A
+
 hetSIGNAL_t SERVO_PAYLOAD;
 hetSIGNAL_t SERVO_CAMERA;
 
@@ -85,6 +88,8 @@ xTaskHandle xTelemetryHandle;
 /* -------------- VARIABLES ----------------*/
 extern char command[COMM_SIZE];
 extern uint32 buff_size;
+extern char tramaAPI[COMM_SIZE];
+extern uint32 buff_sizeAPI;
 
 extern char CMD_KEY[LONG_CMD_KEY];
 

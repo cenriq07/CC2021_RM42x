@@ -4,6 +4,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM.RM42L432.ccxml.Texas Instruments XDS100v2 USB Debug Probe/CortexR4" value="${build_artifact:CC2021_RM42x}"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.RM42L432.ccxml.Texas Instruments XDS100v2 USB Debug Probe/CortexR4" value="CC2021_RM42x"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:CC2021_RM42x}"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.RM42L432.ccxml.Texas Instruments XDS100v2 USB Debug Probe/CortexR4" value="C:\Users\Karla Vianney Montie\Documents\Tareas\KAAN SAT\KaanSatWorkspace\CC2021_RM42x\Debug\CC2021_RM42x.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/CC2021_RM42x"/>
 </listAttribute>

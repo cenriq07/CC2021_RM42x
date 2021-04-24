@@ -144,7 +144,7 @@ void vTelemetry(void *pvParameters)
         }
 
         createTelemetryPacket();
-        sciSendData(buff_size, command, 0);
+        sciSendData(buff_sizeAPI, tramaAPI, 0);
 
         PACKET_COUNT++;
         SP1_PC++;
