@@ -179,7 +179,7 @@ void createTelemetryPacket()
                                      0x00,    //16 Broadcast radio
                                      0x00,    //17 Cmd. Options
                                      command, // MENSAJE - RF DATA
-                                     checksum); //18);
+                                     checksum); //18
 }
 
 float getAltitude(float P)
