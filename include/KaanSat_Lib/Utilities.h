@@ -122,6 +122,7 @@ extern float ALTITUDE_BAR;
 extern char cALTITUDE_BAR[8];
 
 extern float PRESS_BAR;
+extern float PRESS_INIT;
 extern char cPRESS_BAR[8];
 
 extern float TEMPERATURE;

@@ -157,14 +157,62 @@ void vTelemetry(void *pvParameters)
 
 void vSensors(void *pvParameters)
 {
+    int cont=0, i=0, press_i=0;
+    float xT=0, x=0, var=0, desv=0, a=0, b=0;
+    int presion_u[9];
+
     portTickType xSensorsTime;
     xSensorsTime = xTaskGetTickCount();
+    for (i=0;i<=9;i++)
+    {
+        presion_u[i]= PRESS_BAR; //PRIMER ACOMODO DE PRESIONES
+        vTaskDelayUntil(&xSensorsTime, T_SENSORS); //PREGUNTA
+    }
+    for (i=0;i<9;i++)
+                {
+                    press_i += presion_u [i]; //Media
+                }
+     PRESS_INIT = press_i/(float)9;
 
     while(1)
     {
-        ALTITUDE_BAR = getAltitude(PRESS_BAR);
+            for (i=0;i<9;i++)
+            {
+                x += presion_u [i]; //Media
+            }
+            xT = x/(float)9;
 
-        vTaskDelayUntil(&xSensorsTime, T_SENSORS);
+            for (i=0;i<9;i++)
+            {
+                var += pow ((presion_u [i] - xT),2.00); //Varianza
+            }
+            desv= sqrt(var/8); //Desviación estándar
+
+            a = xT-3*desv; //Limite inf
+            b = xT+3*desv;  //Limite sup
+
+            if ((presion_u[9]<a)||(presion_u[9]>b))
+            {
+               //c = 'V'; IDK
+            }
+           else
+           {
+               ALTITUDE_BAR = getAltitude(PRESS_BAR);
+           }
+
+        xT=0;
+        a=0;
+        b=0;
+        desv=0;
+        var=0;
+        x = 0;
+
+        presion_u[cont] = PRESS_BAR;
+        if (cont==9)
+        {
+            cont =-1;
+        }
+        cont++;
     }
 }
 
