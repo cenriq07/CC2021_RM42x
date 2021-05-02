@@ -89,6 +89,10 @@ xTaskHandle xTelemetryHandle;
 extern char command[COMM_SIZE];
 extern char tramaAPI[COMM_SIZE];
 extern uint32 buff_size;
+<<<<<<< HEAD
+=======
+extern char tramaAPI[COMM_SIZE];
+>>>>>>> 7a0862cc5cadc37d0da0f9491a390b8402750dfa
 extern uint32 buff_sizeAPI;
 
 extern char CMD_KEY[LONG_CMD_KEY];

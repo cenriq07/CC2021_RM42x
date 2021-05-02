@@ -144,7 +144,10 @@ void vTelemetry(void *pvParameters)
         }
 
         createTelemetryPacket();
+<<<<<<< HEAD
         //TODO V4
+=======
+>>>>>>> 7a0862cc5cadc37d0da0f9491a390b8402750dfa
         sciSendData(buff_sizeAPI, tramaAPI, 0);
 
         PACKET_COUNT++;
