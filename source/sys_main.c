@@ -169,7 +169,7 @@ void vSensors(void *pvParameters)
     for (i=0;i<=9;i++)
     {
         presion_u[i]= PRESS_BAR; //PRIMER ACOMODO DE PRESIONES
-        vTaskDelayUntil(&xSensorsTime, T_SENSORS); //PREGUNTA
+        vTaskDelayUntil(&xSensorsTime, T_SENSORS);
     }
     for (i=0;i<9;i++)
                 {
@@ -194,9 +194,15 @@ void vSensors(void *pvParameters)
             a = xT-3*desv; //Limite inf
             b = xT+3*desv;  //Limite sup
 
-            if ((presion_u[9]<a)||(presion_u[9]>b))
+            if ((presion_u[cont]<a)||(presion_u[cont]>b))
             {
-               //c = 'V'; IDK
+                m = presion_u(cont) - presion_u(cont-1);
+                n = presion_u(0) - presion_u(9);
+
+                if ((m<-2100)||(n<-2100))
+                {
+                    ALTITUDE_BAR = getAltitude(PRESS_BAR);
+                }
             }
            else
            {
@@ -211,6 +217,8 @@ void vSensors(void *pvParameters)
         x = 0;
 
         presion_u[cont] = PRESS_BAR;
+        vTaskDelayUntil(&xSensorsTime, T_SENSORS);
+
         if (cont==9)
         {
             cont =-1;
