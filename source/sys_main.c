@@ -160,7 +160,7 @@ void vTelemetry(void *pvParameters)
 
 void vSensors(void *pvParameters)
 {
-    int cont=0, i=0, press_i=0;
+    int cont=0, i=0, press_i=0, m=0, n=0, y=0;
     float xT=0, x=0, var=0, desv=0, a=0, b=0;
     int presion_u[9];
 
@@ -179,15 +179,24 @@ void vSensors(void *pvParameters)
 
     while(1)
     {
-            for (i=0;i<9;i++)
+            for (i=0;i<10;i++)
             {
+                if (i==cont)
+                {
+                    y = presion_u[i];
+                    presion_u[i] = 0;
+                }
                 x += presion_u [i]; //Media
             }
             xT = x/(float)9;
 
-            for (i=0;i<9;i++)
+            for (i=0;i<10;i++)
             {
                 var += pow ((presion_u [i] - xT),2.00); //Varianza
+                if (i==cont)
+                {
+                    presion_u[i] = y;
+                }
             }
             desv= sqrt(var/8); //Desviación estándar
 
