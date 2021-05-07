@@ -160,7 +160,7 @@ void vTelemetry(void *pvParameters)
 
 void vSensors(void *pvParameters)
 {
-    int cont=0, i=0, press_i=0, m=0, n=0, y=0;
+    int cont=0, i=0, press_i=0, m=0, n=0, y=0,w=0;
     float xT=0, x=0, var=0, desv=0, a=0, b=0;
     int presion_u[9];
 
@@ -192,12 +192,15 @@ void vSensors(void *pvParameters)
 
             for (i=0;i<10;i++)
             {
-                var += pow ((presion_u [i] - xT),2.00); //Varianza
                 if (i==cont)
                 {
-                    presion_u[i] = y;
+                    w = xT;
+                    xT=0;
                 }
+                var += pow ((presion_u [i] - xT),2.00); //Varianza
+                xT=w;
             }
+            presion_u[i] = y;
             desv= sqrt(var/8); //Desviación estándar
 
             a = xT-3*desv; //Limite inf
@@ -225,7 +228,6 @@ void vSensors(void *pvParameters)
         var=0;
         x = 0;
 
-        presion_u[cont] = PRESS_BAR;
         vTaskDelayUntil(&xSensorsTime, T_SENSORS);
 
         if (cont==9)
@@ -233,6 +235,7 @@ void vSensors(void *pvParameters)
             cont =-1;
         }
         cont++;
+        presion_u[cont] = PRESS_BAR; //CAMBIO
     }
 }
 
