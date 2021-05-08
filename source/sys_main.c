@@ -159,7 +159,7 @@ void vSensors(void *pvParameters)
 {
     int cont=0, i=0, press_i=0, m=0, n=0, y=0,w=0;
     float xT=0, x=0, var=0, desv=0, a=0, b=0;
-    int presion_u[9];
+    int presion_u[10];
 
     portTickType xSensorsTime;
     xSensorsTime = xTaskGetTickCount();
