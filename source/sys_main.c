@@ -231,9 +231,6 @@ void vSensors(void *pvParameters)
                 ALTITUDE_BAR = getAltitude(PRESS_BAR);
             }
 
-
-            cont2++;
-
             xT=0;
             a=0;
             b=0;
