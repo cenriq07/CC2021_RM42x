@@ -29,10 +29,7 @@
 char command[COMM_SIZE] = {};
 char tramaAPI[COMM_SIZE] = {};
 uint32 buff_size = 0;
-<<<<<<< HEAD
-=======
 char tramaAPI[COMM_SIZE] = {};
->>>>>>> 7a0862cc5cadc37d0da0f9491a390b8402750dfa
 uint32 buff_sizeAPI = 0;
 
 char CMD_KEY[LONG_CMD_KEY] = {};
@@ -97,6 +94,7 @@ char SP2_ROTATION_RATE[LONG_SP_PARAM] = "X";
 /*---------------- COMMAND VARIABLES ----------------*/
 bool telemetry_ON = false;
 bool SP_ON = 0;
+bool toggle_sim=0;
 /* ------------ TELEMETRY FORMAT -------------------*/
 //static const char* FORMAT = "1714,%s,C,%c,%c,%c,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s;1714,";
 static const char* CONT_FORMAT = "%s,%s,%s,%s,%s,%s,%s,%s,%s;";

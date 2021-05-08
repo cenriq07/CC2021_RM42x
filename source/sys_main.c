@@ -144,10 +144,7 @@ void vTelemetry(void *pvParameters)
         }
 
         createTelemetryPacket();
-<<<<<<< HEAD
         //TODO V4
-=======
->>>>>>> 7a0862cc5cadc37d0da0f9491a390b8402750dfa
         sciSendData(buff_sizeAPI, tramaAPI, 0);
 
         PACKET_COUNT++;
@@ -166,19 +163,32 @@ void vSensors(void *pvParameters)
 
     portTickType xSensorsTime;
     xSensorsTime = xTaskGetTickCount();
-    for (i=0;i<=9;i++)
-    {
-        presion_u[i]= PRESS_BAR; //PRIMER ACOMODO DE PRESIONES
-        vTaskDelayUntil(&xSensorsTime, T_SENSORS);
-    }
-    for (i=0;i<9;i++)
-                {
-                    press_i += presion_u [i]; //Media
-                }
-     PRESS_INIT = press_i/(float)9;
+    toggle_sim = 1;
 
     while(1)
     {
+        if (toggle_sim==1)
+        {
+            toggle_sim=0;
+            for (i=0;i<=9;i++)
+            {
+                presion_u[i]= PRESS_BAR; //PRIMER ACOMODO DE PRESIONES
+                if (toggle_sim) break;
+                vTaskDelayUntil(&xSensorsTime, T_SENSORS);
+            }
+            if (!toggle_sim)
+            {
+                for (i=0;i<=9;i++)
+                {
+                    press_i += presion_u[i];
+                }
+                press_i = press_i/(float)10;
+                ALTITUDE_INIT=getAltitude(press_i);
+                cont=0;
+            }
+        }
+        else
+        {
             for (i=0;i<10;i++)
             {
                 if (i==cont)
@@ -200,7 +210,7 @@ void vSensors(void *pvParameters)
                 var += pow ((presion_u [i] - xT),2.00); //Varianza
                 xT=w;
             }
-            presion_u[i] = y;
+            presion_u[cont] = y;
             desv= sqrt(var/8); //Desviación estándar
 
             a = xT-3*desv; //Limite inf
@@ -208,34 +218,38 @@ void vSensors(void *pvParameters)
 
             if ((presion_u[cont]<a)||(presion_u[cont]>b))
             {
-                m = presion_u(cont) - presion_u(cont-1);
-                n = presion_u(0) - presion_u(9);
+                m = presion_u[cont] - presion_u[cont-1];
+                n = presion_u[0] - presion_u[9];
 
                 if ((m<-2100)||(n<-2100))
                 {
                     ALTITUDE_BAR = getAltitude(PRESS_BAR);
                 }
             }
-           else
-           {
-               ALTITUDE_BAR = getAltitude(PRESS_BAR);
-           }
+            else
+            {
+                ALTITUDE_BAR = getAltitude(PRESS_BAR);
+            }
 
-        xT=0;
-        a=0;
-        b=0;
-        desv=0;
-        var=0;
-        x = 0;
 
-        vTaskDelayUntil(&xSensorsTime, T_SENSORS);
+            cont2++;
 
-        if (cont==9)
-        {
-            cont =-1;
+            xT=0;
+            a=0;
+            b=0;
+            desv=0;
+            var=0;
+            x = 0;
+
+            vTaskDelayUntil(&xSensorsTime, T_SENSORS);
+
+            if (cont==9)
+            {
+                cont =-1;
+            }
+            cont++;
+            presion_u[cont] = PRESS_BAR; //CAMBIO
         }
-        cont++;
-        presion_u[cont] = PRESS_BAR; //CAMBIO
     }
 }
 
@@ -250,15 +264,17 @@ void vMissionOperations(void *pvParameters)
 
     int i = 0;
     uint8 land = 0;
-    float ALTITUDE_STATES[4] = {1798.0, 1750.0, 1700.0, 1660.0};
+    float ALTITUDE_STATES[4];
 
-//    for(i=0 ; i<10; i++)
-//    {
-//        ALTITUDE_INIT = ALTITUDE_INIT + PRESS_BAR;
-//        vTaskDelayUntil(&xOpsTime, T_TELEMETRY);
-//    }
-//
-//    ALTITUDE_INIT = getAltitude(ALTITUDE_INIT/10);
+    while (ALTITUDE_INIT<0)
+    {
+        vTaskDelayUntil(&xOpsTime, T_OPERATIONS);
+    }
+
+    ALTITUDE_STATES[0]=ALTITUDE_INIT+670;
+    ALTITUDE_STATES[1]=ALTITUDE_INIT+500;
+    ALTITUDE_STATES[2]=ALTITUDE_INIT+400;
+    ALTITUDE_STATES[3]=ALTITUDE_INIT;
 
     i = 0;
     while(1)

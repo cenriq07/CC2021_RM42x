@@ -177,6 +177,7 @@ void commSIM(char *value[])
     else if(sim_ok == 1 && !strcmp(*value,"ACTIVATE"))
     {
         // TODO: "SIMULATION ACTIVATED"
+        toggle_sim=1;
     }
     else
     {
