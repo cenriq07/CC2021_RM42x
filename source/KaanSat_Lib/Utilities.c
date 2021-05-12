@@ -32,6 +32,11 @@ uint32 buff_size = 0;
 char tramaAPI[COMM_SIZE] = {};
 uint32 buff_sizeAPI = 0;
 
+int PRESS_ALL[170];
+int DESV_ALL[170];
+int MEDIA_ALL[170];
+int cont2=0;
+
 char CMD_KEY[LONG_CMD_KEY] = {};
 
 /* ------------------- TELEMETRY -----------------------*/
