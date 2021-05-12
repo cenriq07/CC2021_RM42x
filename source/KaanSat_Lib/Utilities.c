@@ -285,3 +285,71 @@ void ftoa(float n, char *res, int afterpoint)
         sltoa(&res[i+1], abs(fpart) );
     }
 }
+
+void updateAltitude (portTickType xSensorsTime, float presion_u[])
+{
+    int i=0;
+    float press_i=0, press_new=0, x=0, xT=0, var=0, desv=0, a=0, b=0;
+    if (toggle_sim==1)
+    {
+        toggle_sim=0;
+        for (i=0;i<=9;i++)
+        {
+            presion_u[i]= PRESS_BAR; //PRIMER ACOMODO DE PRESIONES
+            if (toggle_sim) break;
+            vTaskDelayUntil(&xSensorsTime, T_SENSORS);
+        }
+        if (!toggle_sim)
+        {
+            for (i=0;i<=9;i++)
+            {
+                press_i += presion_u[i];
+            }
+            press_i = press_i/(float)10;
+            ALTITUDE_INIT=getAltitude(press_i);
+        }
+    }
+    else
+    {
+        press_new = PRESS_BAR; //CAMBIO
+        for (i=0;i<10;i++)
+        {
+            x += presion_u [i]; //Media
+        }
+        xT = x/(float)10;
+        MEDIA_ALL[cont2]=xT;
+
+        for (i=0;i<10;i++)
+        {
+            var += pow ((presion_u [i] - xT),2.00); //Varianza
+        }
+        desv= sqrt(var/9); //Desviación estándar
+        DESV_ALL[cont2]=desv;
+
+        a = xT-3*desv; //Limite inf
+        b = xT+3*desv;  //Limite sup
+
+        if ((press_new<a)||(press_new>b))
+        {
+            /*m = presion_u[(*cont)] - presion_u[(*cont)-1];
+            n = presion_u[0] - presion_u[9];
+
+            if ((m<-2100)||(n<-2100))
+            {
+                ALTITUDE_BAR = getAltitude(PRESS_BAR);
+                PRESS_ALL[cont2]=PRESS_BAR;
+            }*/
+        }
+        else
+        {
+            ALTITUDE_BAR = getAltitude(PRESS_BAR);
+            PRESS_ALL[cont2]=PRESS_BAR;
+        }
+        for (i=0;i<9;i++)
+        {
+            presion_u[i]=presion_u[i+1];
+        }
+        presion_u[9]=press_new;
+        cont2++;
+    }
+}

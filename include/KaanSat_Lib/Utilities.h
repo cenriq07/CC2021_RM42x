@@ -162,6 +162,7 @@ void createTelemetryPacket();
 bool sciSendData(uint32 numOfDat, char* charDat, bool CR);
 
 float getAltitude(float P);
+void updateAltitude (portTickType xSensorsTime, float presion_u[]);
 
 static void reverse(char *s, size_t s_len);
 size_t sltoa(char *s, long int n);

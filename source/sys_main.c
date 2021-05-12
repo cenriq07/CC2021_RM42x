@@ -157,9 +157,7 @@ void vTelemetry(void *pvParameters)
 
 void vSensors(void *pvParameters)
 {
-    int cont=0, i=0, press_i=0, m=0, n=0, y=0,w=0;
-    float xT=0, x=0, var=0, desv=0, a=0, b=0;
-    int presion_u[10];
+    float presion_u[10];
 
     portTickType xSensorsTime;
     xSensorsTime = xTaskGetTickCount();
@@ -167,86 +165,8 @@ void vSensors(void *pvParameters)
 
     while(1)
     {
-        if (toggle_sim==1)
-        {
-            toggle_sim=0;
-            for (i=0;i<=9;i++)
-            {
-                presion_u[i]= PRESS_BAR; //PRIMER ACOMODO DE PRESIONES
-                if (toggle_sim) break;
-                vTaskDelayUntil(&xSensorsTime, T_SENSORS);
-            }
-            if (!toggle_sim)
-            {
-                for (i=0;i<=9;i++)
-                {
-                    press_i += presion_u[i];
-                }
-                press_i = press_i/(float)10;
-                ALTITUDE_INIT=getAltitude(press_i);
-                cont=0;
-            }
-        }
-        else
-        {
-            for (i=0;i<10;i++)
-            {
-                if (i==cont)
-                {
-                    y = presion_u[i];
-                    presion_u[i] = 0;
-                }
-                x += presion_u [i]; //Media
-            }
-            xT = x/(float)9;
-
-            for (i=0;i<10;i++)
-            {
-                if (i==cont)
-                {
-                    w = xT;
-                    xT=0;
-                }
-                var += pow ((presion_u [i] - xT),2.00); //Varianza
-                xT=w;
-            }
-            presion_u[cont] = y;
-            desv= sqrt(var/8); //Desviación estándar
-
-            a = xT-3*desv; //Limite inf
-            b = xT+3*desv;  //Limite sup
-
-            if ((presion_u[cont]<a)||(presion_u[cont]>b))
-            {
-                m = presion_u[cont] - presion_u[cont-1];
-                n = presion_u[0] - presion_u[9];
-
-                if ((m<-2100)||(n<-2100))
-                {
-                    ALTITUDE_BAR = getAltitude(PRESS_BAR);
-                }
-            }
-            else
-            {
-                ALTITUDE_BAR = getAltitude(PRESS_BAR);
-            }
-
-            xT=0;
-            a=0;
-            b=0;
-            desv=0;
-            var=0;
-            x = 0;
-
-            vTaskDelayUntil(&xSensorsTime, T_SENSORS);
-
-            if (cont==9)
-            {
-                cont =-1;
-            }
-            cont++;
-            presion_u[cont] = PRESS_BAR; //CAMBIO
-        }
+        updateAltitude (xSensorsTime, presion_u);
+        vTaskDelayUntil(&xSensorsTime, T_SENSORS);
     }
 }
 
