@@ -32,11 +32,6 @@ uint32 buff_size = 0;
 char tramaAPI[COMM_SIZE] = {};
 uint32 buff_sizeAPI = 0;
 
-int PRESS_ALL[170];
-int DESV_ALL[170];
-int MEDIA_ALL[170];
-int cont2=0;
-
 char CMD_KEY[LONG_CMD_KEY] = {};
 
 /* ------------------- TELEMETRY -----------------------*/
@@ -158,7 +153,6 @@ void createTelemetryPacket()
 //                        SP2_TEMPERATURE,                /* <TEMP> */
 //                        SP2_ROTATION_RATE               /* <SP_ROTATION_RATE> */
                         );
-<<<<<<< HEAD
             longAPI = (char*)buff_size + 0x0E;          /* LONGITUD DE LA TRAMA     0E ES CONSTANTE */
 
             preSum = 0x00;                              /* SUMA HEXADECIMAL DE CADA CARACTER */
@@ -193,42 +187,6 @@ void createTelemetryPacket()
                                                //D0 MENSAJE - RF DATA
                                                command,
                                                checksum); //18);
-=======
-
-    longAPI = (char*)buff_size + 0x0E;          /* LONGITUD DE LA TRAMA     0E ES CONSTANTE */
-
-    preSum = 0x00;                              /* SUMA HEXADECIMAL DE CADA CARACTER */
-
-    for(i=0; i<buff_size; i++)                  //Caracteres de la trama
-    {
-        preSum = preSum + command[i];
-    }
-
-    /*Cheksum*/
-    Sum = 0x10 + (DH>>24) + ((DH>>16) & 0xFF) + ((DH>>8) & 0xFF) + (DH & 0xFF) + (DL_ET>>24) + ((DL_ET>>16) & 0xFF) + ((DL_ET>>8) & 0xFF) + (DL_ET & 0xFF) + 0xFF + 0xFE + preSum;
-    checksum = (0xFF - (Sum & 0xFF));
-
-    buff_sizeAPI = sprintf(tramaAPI,"%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%s%c",
-                                     0x7E,    //1 Start Delimiter
-                                     0x00,    //2 Length
-                                     longAPI,    //3 Length
-                                     0x10,    //4 Frame type
-                                     0x00,    //5 Frame ID
-                                     DH>>24,  //6 Dest. Adress
-                                     (DH>>16) & 0xFF, //7 Dest. Adress
-                                     (DH>>8) & 0xFF,  //8 Dest. Adress
-                                     DH & 0xFF,       //9 Dest. Adress
-                                     DL_ET>>24,          //10 Dest. Adress
-                                     (DL_ET>>16) & 0xFF, //11 Dest. Adress
-                                     (DL_ET>>8) & 0xFF,  //12 Dest. Adress
-                                     DL_ET & 0xFF,       //13 Dest. Adress
-                                     0xFF,    //14 Reserved
-                                     0xFE,    //15 Reserved
-                                     0x00,    //16 Broadcast radio
-                                     0x00,    //17 Cmd. Options
-                                     command, // MENSAJE - RF DATA
-                                     checksum); //18
->>>>>>> 7a0862cc5cadc37d0da0f9491a390b8402750dfa
 }
 
 float getAltitude(float P)
@@ -322,14 +280,12 @@ void updateAltitude (portTickType xSensorsTime, float presion_u[])
             x += presion_u [i]; //Media
         }
         xT = x/(float)10;
-        MEDIA_ALL[cont2]=xT;
 
         for (i=0;i<10;i++)
         {
             var += pow ((presion_u [i] - xT),2.00); //Varianza
         }
         desv= sqrt(var/9); //Desviación estándar
-        DESV_ALL[cont2]=desv;
 
         a = xT-3*desv; //Limite inf
         b = xT+3*desv;  //Limite sup
@@ -342,19 +298,16 @@ void updateAltitude (portTickType xSensorsTime, float presion_u[])
             if ((m<-2100)||(n<-2100))
             {
                 ALTITUDE_BAR = getAltitude(PRESS_BAR);
-                PRESS_ALL[cont2]=PRESS_BAR;
             }*/
         }
         else
         {
             ALTITUDE_BAR = getAltitude(PRESS_BAR);
-            PRESS_ALL[cont2]=PRESS_BAR;
         }
         for (i=0;i<9;i++)
         {
             presion_u[i]=presion_u[i+1];
         }
         presion_u[9]=press_new;
-        cont2++;
     }
 }
